@@ -19,7 +19,7 @@ let createTask = (env) => {
     let config = bindingConfig({
         env: env,
         oper: oper,
-        option: { src: 'src', dist: 'lib' }
+        option: { src: 'src/**/*.ts', dist: 'lib' }
     });
 
     let tasks = config.generateTask([
