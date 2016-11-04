@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { IDynamicTask, Operation, ITaskConfig, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
+import { IDynamicTaskOption, Operation, ITaskConfig, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
 // import * as chalk from 'chalk';
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
@@ -44,7 +44,7 @@ export interface ITsTaskOption {
 @dynamicTask
 export class TsTasks implements IDynamicTasks {
 
-    tasks(): IDynamicTask[] {
+    tasks(): IDynamicTaskOption[] {
         return [
             {
                 name: 'tscompile',

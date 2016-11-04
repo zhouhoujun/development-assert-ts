@@ -1,4 +1,4 @@
-import { IDynamicTask, IDynamicTasks } from 'development-core';
+import { IDynamicTaskOption, IDynamicTasks } from 'development-core';
 export interface ITsTaskOption {
     tsconfigFile?: string;
     tsconfig?: any;
@@ -6,6 +6,6 @@ export interface ITsTaskOption {
     sourceMaps: string;
 }
 export declare class TsTasks implements IDynamicTasks {
-    tasks(): IDynamicTask[];
+    tasks(): IDynamicTaskOption[];
     private getTsProject(config);
 }

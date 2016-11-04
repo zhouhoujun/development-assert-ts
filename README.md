@@ -47,7 +47,11 @@ Development.create(gulp, __dirname, {
                 ts: {
                     //src: '...',
                     //dist:'...',
-                    loader: 'development-assert-ts'
+                    loader: {
+                        module:'development-assert-ts',
+                        pipes: Pipe[] | (config, dist, gulp)=> Pipe[],
+                        output: OutputPipe[] | (stream, config, dist, gulp)=> OutputPipe[]
+                    }
                 },
                 json: 'src/**/*.json',
                 css:'src/common/**/*.css',
