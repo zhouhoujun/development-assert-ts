@@ -25,7 +25,7 @@ let createTask = (env) => {
     let tasks = config.generateTask([
         {
             name: 'test', src: 'test/**/*spec.ts', order: 1,
-            oper: Operation.test | Operation.release | Operation.deploy,
+            oper: Operation.test | Operation.default,
             pipes: [mocha],
             output: null
         },

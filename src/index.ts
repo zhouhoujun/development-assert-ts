@@ -48,16 +48,13 @@ export class TsTasks implements IDynamicTasks {
         return [
             {
                 name: 'tscompile',
-                oper: Operation.build | Operation.e2e | Operation.test,
+                oper: Operation.build,
                 pipes: [
                     () => cache('typescript'),
                     sourcemaps.init,
                     (config) => {
                         let transform = this.getTsProject(config);
-                        transform.transformSourcePipe = (source) => {
-                            // console.log('transformSourcePipe: work.')
-                            return source.pipe(transform)['js'];
-                        };
+                        transform.transformSourcePipe = (source) => source.pipe(transform)['js'];
                         return transform;
                     },
                     (config) => babel((<ITsTaskOption>config.option).babelOption || { presets: ['es2015'] }),
@@ -81,7 +78,7 @@ export class TsTasks implements IDynamicTasks {
             },
             {
                 name: 'tswatch',
-                oper: Operation.build | Operation.e2e | Operation.test,
+                oper: Operation.build,
                 watchTasks: ['tscompile']
             }
         ];
