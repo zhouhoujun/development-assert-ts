@@ -8,7 +8,12 @@ const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 
 
-
+/**
+ * typescript task option.
+ * 
+ * @export
+ * @interface ITsTaskOption
+ */
 export interface ITsTaskOption {
     /**
      * ts tsconfig.json file path.
@@ -41,6 +46,7 @@ export interface ITsTaskOption {
      */
     sourceMaps: string;
 }
+
 @dynamicTask
 export class TsTasks implements IDynamicTasks {
 

@@ -1,4 +1,10 @@
 import { IDynamicTaskOption, IDynamicTasks } from 'development-core';
+/**
+ * typescript task option.
+ *
+ * @export
+ * @interface ITsTaskOption
+ */
 export interface ITsTaskOption {
     /**
      * ts tsconfig.json file path.
