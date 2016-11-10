@@ -49,9 +49,15 @@ Development.create(gulp, __dirname, {
                     //dist:'...',
                     loader: {
                         module:'development-assert-ts',
+                        // add pipe works for module tasks.
+                        pipe(stream, config, dist, gulp){ ... }
                         pipes: Pipe[] | (config, dist, gulp)=> Pipe[],
                         output: OutputPipe[] | (stream, config, dist, gulp)=> OutputPipe[]
-                    }
+                    },
+                    //also can add pipe works here.
+                    pipe(stream, config, dist, gulp){ ... }
+                    pipes: Pipe[] | (config, dist, gulp)=> Pipe[],
+                    output: OutputPipe[] | (stream, config, dist, gulp)=> OutputPipe[]
                 },
                 json: 'src/**/*.json',
                 css:'src/common/**/*.css',
