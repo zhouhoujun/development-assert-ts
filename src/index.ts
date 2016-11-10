@@ -57,7 +57,7 @@ export class TsTasks implements IDynamicTasks {
                 oper: Operation.build,
                 pipes: [
                     () => cache('typescript'),
-                    sourcemaps.init,
+                    () => sourcemaps.init(),
                     (config) => {
                         let transform = this.getTsProject(config);
                         transform.transformSourcePipe = (source) => source.pipe(transform)['js'];
@@ -72,7 +72,7 @@ export class TsTasks implements IDynamicTasks {
                 oper: Operation.release | Operation.deploy,
                 pipes: [
                     () => cache('typescript'),
-                    sourcemaps.init,
+                    () => sourcemaps.init(),
                     (config) => this.getTsProject(config)
                 ],
                 output: [
