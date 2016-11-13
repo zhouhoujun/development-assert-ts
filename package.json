@@ -1,6 +1,6 @@
 {
   "name": "development-assert-ts",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "development build tools for node.",
   "main": "./lib/index.js",
   "typings": "./lib/index",

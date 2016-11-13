@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { IDynamicTaskOption, Operation, ITaskConfig, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
+import { IDynamicTaskOption, Operation, ITaskContext, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
 // import * as chalk from 'chalk';
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
@@ -16,14 +16,14 @@ const babel = require('gulp-babel');
  */
 export interface ITsTaskOption {
     /**
-     * ts tsconfig.json file path.
+     * ts tsctx.json file path.
      * 
      * @type {sring}
      * @memberOf ITsTaskOption
      */
     tsconfigFile?: string;
     /**
-     * ts compile config.
+     * ts compile ctx.
      * 
      * @type {*}
      * @memberOf ITsTaskOption
@@ -58,13 +58,13 @@ export class TsTasks implements IDynamicTasks {
                 pipes: [
                     () => cache('typescript'),
                     () => sourcemaps.init(),
-                    (config) => {
-                        let transform = this.getTsProject(config);
+                    (ctx) => {
+                        let transform = this.getTsProject(ctx);
                         transform.transformSourcePipe = (source) => source.pipe(transform)['js'];
                         return transform;
                     },
-                    (config) => babel((<ITsTaskOption>config.option).babelOption || { presets: ['es2015'] }),
-                    (config) => sourcemaps.write((<ITsTaskOption>config.option).sourceMaps || './sourcemaps')
+                    (ctx) => babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }),
+                    (ctx) => sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps')
                 ]
             },
             {
@@ -73,13 +73,13 @@ export class TsTasks implements IDynamicTasks {
                 pipes: [
                     () => cache('typescript'),
                     () => sourcemaps.init(),
-                    (config) => this.getTsProject(config)
+                    (ctx) => this.getTsProject(ctx)
                 ],
                 output: [
-                    (tsmap, config, dt, gulp) => tsmap.dts.pipe(gulp.dest(config.getDist(dt))),
-                    (tsmap, config, dt, gulp) => tsmap.js.pipe(babel((<ITsTaskOption>config.option).babelOption || { presets: ['es2015'] }))
-                        .pipe(uglify()).pipe(sourcemaps.write((<ITsTaskOption>config.option).sourceMaps || './sourcemaps'))
-                        .pipe(gulp.dest(config.getDist(dt)))
+                    (tsmap, ctx, dt, gulp) => tsmap.dts.pipe(gulp.dest(ctx.getDist(dt))),
+                    (tsmap, ctx, dt, gulp) => tsmap.js.pipe(babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }))
+                        .pipe(uglify()).pipe(sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps'))
+                        .pipe(gulp.dest(ctx.getDist(dt)))
                 ]
             },
             {
@@ -90,12 +90,12 @@ export class TsTasks implements IDynamicTasks {
         ];
     }
 
-    private getTsProject(config: ITaskConfig): ITransform {
-        let option = <ITsTaskOption>config.option;
+    private getTsProject(ctx: ITaskContext): ITransform {
+        let option = <ITsTaskOption>ctx.option;
         if (option.tsconfig) {
             return ts(option.tsconfig);
         } else {
-            let tsProject = ts.createProject(path.join(config.env.root || '', option.tsconfigFile || './tsconfig.json'));
+            let tsProject = ts.createProject(path.join(ctx.env.root || '', option.tsconfigFile || './tsconfig.json'));
             return tsProject();
         }
     }

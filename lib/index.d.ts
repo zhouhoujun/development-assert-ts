@@ -7,14 +7,14 @@ import { IDynamicTaskOption, IDynamicTasks } from 'development-core';
  */
 export interface ITsTaskOption {
     /**
-     * ts tsconfig.json file path.
+     * ts tsctx.json file path.
      *
      * @type {sring}
      * @memberOf ITsTaskOption
      */
     tsconfigFile?: string;
     /**
-     * ts compile config.
+     * ts compile ctx.
      *
      * @type {*}
      * @memberOf ITsTaskOption
@@ -37,5 +37,5 @@ export interface ITsTaskOption {
 }
 export declare class TsTasks implements IDynamicTasks {
     tasks(): IDynamicTaskOption[];
-    private getTsProject(config);
+    private getTsProject(ctx);
 }
