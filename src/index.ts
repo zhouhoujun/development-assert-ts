@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { IDynamicTaskOption, Operation, ITaskContext, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
+import { IDynamicTaskOption, Operation, ITaskContext, OutputPipe, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
 // import * as chalk from 'chalk';
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
@@ -75,9 +75,9 @@ export class TsTasks implements IDynamicTasks {
                     () => sourcemaps.init(),
                     (ctx) => this.getTsProject(ctx)
                 ],
-                output: [
-                    (tsmap, ctx, dt, gulp) => tsmap.dts.pipe(gulp.dest(ctx.getDist(dt))),
-                    (tsmap, ctx, dt, gulp) => tsmap.js.pipe(babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }))
+                output: <OutputPipe[]>[
+                    (tsmap, ctx, dt, gulp) => tsmap['dts'].pipe(gulp.dest(ctx.getDist(dt))),
+                    (tsmap, ctx, dt, gulp) => tsmap['js'].pipe(babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }))
                         .pipe(uglify()).pipe(sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps'))
                         .pipe(gulp.dest(ctx.getDist(dt)))
                 ]

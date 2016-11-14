@@ -1,7 +1,7 @@
 {
   "name": "development-assert-ts",
-  "version": "0.3.1",
-  "description": "development build tools for node.",
+  "version": "0.3.2",
+  "description": "typescript assert tasks for development.",
   "main": "./lib/index.js",
   "typings": "./lib/index",
   "scripts": {
