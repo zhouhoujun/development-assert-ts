@@ -17,7 +17,7 @@ gulp.task('build', () => {
 let createTask = (env) => {
     let config = bindingConfig({
         env: env,
-        option: { src: 'src/**/*.ts', buildDist:'build', dist: 'lib' }
+        option: { src: 'src/**/*.ts', buildDist: 'build', dist: 'lib' }
     });
 
     let tasks = config.generateTask([
