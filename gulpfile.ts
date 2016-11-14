@@ -1,5 +1,5 @@
 import * as gulp from 'gulp';
-import { bindingConfig, currentOperation, runTaskSequence, IEnvOption, Operation } from 'development-core';
+import { bindingConfig, runTaskSequence, IEnvOption, Operation } from 'development-core';
 import * as mocha from 'gulp-mocha';
 import * as minimist from 'minimist';
 import * as path from 'path';
