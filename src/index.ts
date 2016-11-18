@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { IDynamicTaskOption, Operation, ITaskContext, OutputPipe, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
+import { IDynamicTaskOption, Operation, IAsserts,  ITaskContext, OutputPipe, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
 // import * as chalk from 'chalk';
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
@@ -9,12 +9,13 @@ const babel = require('gulp-babel');
 
 
 /**
- * typescript task option.
+ * typescript assert task option.
  * 
  * @export
  * @interface ITsTaskOption
+ * @extends {IAsserts}
  */
-export interface ITsTaskOption {
+export interface ITsTaskOption extends IAsserts {
     /**
      * ts tsctx.json file path.
      * 
@@ -54,6 +55,7 @@ export class TsTasks implements IDynamicTasks {
         return [
             {
                 name: 'tscompile',
+                watch: true,
                 oper: Operation.build,
                 pipes: [
                     () => cache('typescript'),
@@ -81,11 +83,6 @@ export class TsTasks implements IDynamicTasks {
                         .pipe(uglify()).pipe(sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps'))
                         .pipe(gulp.dest(ctx.getDist(dt)))
                 ]
-            },
-            {
-                name: 'tswatch',
-                oper: Operation.build,
-                watchTasks: ['tscompile']
             }
         ];
     }

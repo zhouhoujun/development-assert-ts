@@ -1,11 +1,12 @@
-import { IDynamicTaskOption, IDynamicTasks } from 'development-core';
+import { IDynamicTaskOption, IAsserts, IDynamicTasks } from 'development-core';
 /**
- * typescript task option.
+ * typescript assert task option.
  *
  * @export
  * @interface ITsTaskOption
+ * @extends {IAsserts}
  */
-export interface ITsTaskOption {
+export interface ITsTaskOption extends IAsserts {
     /**
      * ts tsctx.json file path.
      *
