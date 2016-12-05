@@ -1,3 +1,4 @@
+/// <reference types="chai" />
 /// <reference types="gulp" />
 import { Gulp } from 'gulp';
 import { IAssertDist, IAsserts, ITaskInfo, PipeTask, Pipe, TransformSource, ITaskContext } from 'development-core';
@@ -23,6 +24,13 @@ export interface ITsTaskOption extends IAsserts {
      * @memberOf ITsTaskOption
      */
     tsconfig?: any;
+    /**
+     * zip compile js.
+     *
+     * @type {(boolean | Object)}
+     * @memberOf ITsTaskOption
+     */
+    uglify?: boolean | Object;
     /**
      * babel 6 option.
      *

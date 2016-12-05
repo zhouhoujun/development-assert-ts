@@ -37,6 +37,14 @@ export interface ITsTaskOption extends IAsserts {
     tsconfig?: any;
 
     /**
+     * zip compile js.
+     * 
+     * @type {(boolean | Object)}
+     * @memberOf ITsTaskOption
+     */
+    uglify?: boolean | Object;
+
+    /**
      * babel 6 option.
      * 
      * @type {*}
@@ -86,14 +94,22 @@ export class TsCompile extends PipeTask {
     }
 
     pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[] {
-        return [
-            (ctx) => babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }),
-            {
-                oper: Operation.deploy | Operation.release,
-                toTransform: (ctx) => uglify()
-            },
-            (ctx) => sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps')
+        let option = <ITsTaskOption>ctx.option;
+        let pipes: Pipe[] = [
+            (ctx) => babel(option.babelOption || { presets: ['es2015'] }),
+            (ctx) => sourcemaps.write(option.sourceMaps || './sourcemaps')
         ];
+
+        if (_.isUndefined(option.uglify)) {
+            option.uglify = true;
+        }
+        if (option.uglify) {
+            pipes.splice(1, 0, {
+                oper: Operation.deploy | Operation.release,
+                toTransform: (ctx) => _.isBoolean(option.uglify) ? uglify() : uglify(option.uglify)
+            });
+        }
+        return pipes;
     }
 
     private getTsProject(ctx: ITaskContext): ITransform {
