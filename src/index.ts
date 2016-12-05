@@ -63,7 +63,7 @@ export interface ITsTaskOption extends IAsserts {
 
 
 @task({
-    oper: Operation.default
+    oper: Operation.default | Operation.autoWatch
 })
 export class TsCompile extends PipeTask {
     constructor(info: ITaskInfo) {
