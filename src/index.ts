@@ -1,5 +1,10 @@
 import * as path from 'path';
-import { IDynamicTaskOption, Operation, IAsserts,  ITaskContext, OutputPipe, IDynamicTasks, dynamicTask, ITransform } from 'development-core';
+import { Gulp } from 'gulp';
+import {
+    Operation, IAssertDist, IAsserts, ITaskInfo, PipeTask, IOperate, Pipe
+    , TransformSource, task, ITaskContext, ITransform
+} from 'development-core';
+import * as _ from 'lodash';
 // import * as chalk from 'chalk';
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
@@ -17,7 +22,7 @@ const babel = require('gulp-babel');
  */
 export interface ITsTaskOption extends IAsserts {
     /**
-     * ts tsctx.json file path.
+     * ts tsconfig.json file path.
      * 
      * @type {sring}
      * @memberOf ITsTaskOption
@@ -45,45 +50,49 @@ export interface ITsTaskOption extends IAsserts {
      * @type {string}
      * @memberOf ITsTaskOption
      */
-    sourceMaps: string;
+    sourceMaps?: string;
 }
 
-@dynamicTask
-export class TsTasks implements IDynamicTasks {
 
-    tasks(): IDynamicTaskOption[] {
+@task({
+    oper: Operation.default
+})
+export class TsCompile extends PipeTask {
+    constructor(info: ITaskInfo) {
+        super(info)
+    }
+
+    getInfo() {
+        this.info.name = this.info.name || 'tscompile';
+        return this.info;
+    }
+
+    source(ctx: ITaskContext, dist: IAssertDist, gulp: Gulp): TransformSource | Promise<TransformSource> {
+        let info = this.getInfo();
+        let source = gulp.src(ctx.getSrc(info))
+            .pipe(cache('typescript'))
+            .pipe(sourcemaps.init())
+            .pipe(this.getTsProject(ctx));
+
+        if (ctx.oper & Operation.build) {
+            return source['js'];
+        } else {
+            return [
+                source['js'],
+                _.extend(source['dts'], <IOperate>{ nonePipe: true })
+            ]
+        }
+
+    }
+
+    pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[] {
         return [
+            (ctx) => babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }),
             {
-                name: 'tscompile',
-                watch: true,
-                oper: Operation.build,
-                pipes: [
-                    () => cache('typescript'),
-                    () => sourcemaps.init(),
-                    (ctx) => {
-                        let transform = this.getTsProject(ctx);
-                        transform.transformSourcePipe = (source) => source.pipe(transform)['js'];
-                        return transform;
-                    },
-                    (ctx) => babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }),
-                    (ctx) => sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps')
-                ]
+                oper: Operation.deploy | Operation.release,
+                toTransform: (ctx) => uglify()
             },
-            {
-                name: 'tscompile',
-                oper: Operation.release | Operation.deploy,
-                pipes: [
-                    () => cache('typescript'),
-                    () => sourcemaps.init(),
-                    (ctx) => this.getTsProject(ctx)
-                ],
-                output: <OutputPipe[]>[
-                    (tsmap, ctx, dt, gulp) => tsmap['dts'].pipe(gulp.dest(ctx.getDist(dt))),
-                    (tsmap, ctx, dt, gulp) => tsmap['js'].pipe(babel((<ITsTaskOption>ctx.option).babelOption || { presets: ['es2015'] }))
-                        .pipe(uglify()).pipe(sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps'))
-                        .pipe(gulp.dest(ctx.getDist(dt)))
-                ]
-            }
+            (ctx) => sourcemaps.write((<ITsTaskOption>ctx.option).sourceMaps || './sourcemaps')
         ];
     }
 

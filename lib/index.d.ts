@@ -1,4 +1,6 @@
-import { IDynamicTaskOption, IAsserts, IDynamicTasks } from 'development-core';
+/// <reference types="gulp" />
+import { Gulp } from 'gulp';
+import { IAssertDist, IAsserts, ITaskInfo, PipeTask, Pipe, TransformSource, ITaskContext } from 'development-core';
 /**
  * typescript assert task option.
  *
@@ -8,7 +10,7 @@ import { IDynamicTaskOption, IAsserts, IDynamicTasks } from 'development-core';
  */
 export interface ITsTaskOption extends IAsserts {
     /**
-     * ts tsctx.json file path.
+     * ts tsconfig.json file path.
      *
      * @type {sring}
      * @memberOf ITsTaskOption
@@ -34,9 +36,12 @@ export interface ITsTaskOption extends IAsserts {
      * @type {string}
      * @memberOf ITsTaskOption
      */
-    sourceMaps: string;
+    sourceMaps?: string;
 }
-export declare class TsTasks implements IDynamicTasks {
-    tasks(): IDynamicTaskOption[];
+export declare class TsCompile extends PipeTask {
+    constructor(info: ITaskInfo);
+    getInfo(): ITaskInfo;
+    source(ctx: ITaskContext, dist: IAssertDist, gulp: Gulp): TransformSource | Promise<TransformSource>;
+    pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[];
     private getTsProject(ctx);
 }
