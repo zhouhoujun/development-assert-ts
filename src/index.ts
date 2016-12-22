@@ -10,7 +10,6 @@ const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-const babel = require('gulp-babel');
 
 
 /**
