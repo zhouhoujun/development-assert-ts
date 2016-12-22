@@ -38,7 +38,7 @@
     "gulp-typescript": "^3.0.2",
     "gulp-uglify": "^2.0.0",
     "lodash": "^4.13.1",
-    "typescript": "^2.0.3"
+    "typescript": "^2.1.4"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
