@@ -32,6 +32,10 @@ export interface ITsTaskOption extends IAsserts {
      */
     uglify?: boolean | Object;
     /**
+     * ts pipes tasks.
+     */
+    tsPipes: Pipe[];
+    /**
      * babel 6 option.
      *
      * @type {*}
@@ -49,6 +53,7 @@ export interface ITsTaskOption extends IAsserts {
 export declare class TsCompile extends PipeTask {
     constructor(info: ITaskInfo);
     getInfo(): ITaskInfo;
+    tsPipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[];
     source(ctx: ITaskContext, dist: IAssertDist, gulp: Gulp): TransformSource | Promise<TransformSource>;
     pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[];
     private getTsProject(ctx);

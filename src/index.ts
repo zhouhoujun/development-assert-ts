@@ -45,6 +45,11 @@ export interface ITsTaskOption extends IAsserts {
     uglify?: boolean | Object;
 
     /**
+     * ts pipes tasks.
+     */
+    tsPipes: Pipe[];
+
+    /**
      * babel 6 option.
      * 
      * @type {*}
@@ -75,28 +80,40 @@ export class TsCompile extends PipeTask {
         return this.info;
     }
 
+    tsPipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[] {
+        let option = <ITsTaskOption>ctx.option;
+        let pipes: Pipe[] = [
+            (ctx) => cache('typescript'),
+            (ctx) => sourcemaps.init()
+        ];
+        if (option.tsPipes && option.tsPipes.length > 0) {
+            pipes.concat(option.tsPipes);
+        }
+        pipes.push((ctx) => this.getTsProject(ctx));
+        return pipes;
+    }
+
     source(ctx: ITaskContext, dist: IAssertDist, gulp: Gulp): TransformSource | Promise<TransformSource> {
         let info = this.getInfo();
-        let source = gulp.src(ctx.getSrc(info))
-            .pipe(cache('typescript'))
-            .pipe(sourcemaps.init())
-            .pipe(this.getTsProject(ctx));
+        let source = gulp.src(ctx.getSrc(info));
 
-        if (ctx.oper & Operation.build) {
-            return source['js'];
-        } else {
-            return [
-                source['js'],
-                _.extend(source['dts'], <IOperate>{ nonePipe: true })
-            ]
-        }
+        return this.pipes2Promise(source, ctx, dist, gulp, this.tsPipes(ctx, dist, gulp))
+            .then(stream => {
+                if (ctx.oper & Operation.build) {
+                    return stream['js'];
+                } else {
+                    return [
+                        stream['js'],
+                        _.extend(stream['dts'], <IOperate>{ nonePipe: true })
+                    ]
+                }
+            });
 
     }
 
     pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[] {
         let option = <ITsTaskOption>ctx.option;
         let pipes: Pipe[] = [
-            (ctx) => babel(option.babelOption || { presets: ['es2015'] }),
             (ctx) => sourcemaps.write(option.sourceMaps || './sourcemaps')
         ];
 
@@ -104,12 +121,12 @@ export class TsCompile extends PipeTask {
             option.uglify = true;
         }
         if (option.uglify) {
-            pipes.splice(1, 0, {
+            pipes.splice(0, 0, {
                 oper: Operation.deploy | Operation.release,
                 toTransform: (ctx) => _.isBoolean(option.uglify) ? uglify() : uglify(option.uglify)
             });
         }
-        return pipes;
+        return pipes.concat(super.pipes(ctx, dist, gulp));
     }
 
     private getTsProject(ctx: ITaskContext): ITransform {
