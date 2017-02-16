@@ -1,5 +1,5 @@
 {
-  "name": "development-tool-node",
+  "name": "development-tool-ts",
   "compilerOptions": {
     "module": "commonjs",
     "target":"es5",
