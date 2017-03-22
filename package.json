@@ -1,6 +1,6 @@
 {
     "name": "development-assert-ts",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "typescript assert tasks for development.",
     "main": "./lib/index.js",
     "typings": "./lib/index",
@@ -38,7 +38,7 @@
         "gulp-typescript": "3.*",
         "gulp-uglify": "2.0.0",
         "lodash": "^4.13.1",
-        "typescript": "2.*"
+        "typescript": "^2.2.1"
     },
     "devDependencies": {
         "gulp": "^3.9.1",
