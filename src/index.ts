@@ -86,7 +86,7 @@ export class TsCompile extends PipeTask {
             (ctx) => sourcemaps.init()
         ];
         if (option.tsPipes && option.tsPipes.length > 0) {
-            pipes.concat(option.tsPipes);
+            pipes = pipes.concat(option.tsPipes);
         }
         pipes.push((ctx) => this.getTsProject(ctx));
         return pipes;
@@ -116,16 +116,14 @@ export class TsCompile extends PipeTask {
             (ctx) => sourcemaps.write(option.sourceMaps || './sourcemaps')
         ];
 
-        if (_.isUndefined(option.uglify)) {
-            option.uglify = true;
-        }
         if (option.uglify) {
             pipes.splice(0, 0, {
                 oper: Operation.deploy | Operation.release,
                 toTransform: (ctx) => _.isBoolean(option.uglify) ? uglify() : uglify(option.uglify)
             });
         }
-        return pipes.concat(super.pipes(ctx, dist, gulp));
+        pipes = pipes.concat(super.pipes(ctx, dist, gulp));
+        return pipes;
     }
 
     private getTsProject(ctx: ITaskContext): ITransform {
