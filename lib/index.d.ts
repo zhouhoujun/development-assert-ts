@@ -49,6 +49,10 @@ export interface ITsTaskOption extends IAsserts {
      * @memberOf ITsTaskOption
      */
     sourceMaps?: string;
+    /**
+     * compile .tds define file.
+     */
+    withTDS?: boolean;
 }
 export declare class TsCompile extends PipeTask {
     constructor(info: ITaskInfo);

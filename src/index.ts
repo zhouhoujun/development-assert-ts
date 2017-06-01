@@ -63,6 +63,11 @@ export interface ITsTaskOption extends IAsserts {
      * @memberOf ITsTaskOption
      */
     sourceMaps?: string;
+
+    /**
+     * compile .tds define file.
+     */
+    withTDS?: boolean;
 }
 
 
@@ -95,10 +100,10 @@ export class TsCompile extends PipeTask {
     source(ctx: ITaskContext, dist: IAssertDist, gulp: Gulp): TransformSource | Promise<TransformSource> {
         let info = this.getInfo();
         let source = gulp.src(ctx.getSrc(info));
-
+        let option = <ITsTaskOption>ctx.option;
         return this.pipes2Promise(source, ctx, dist, gulp, this.tsPipes(ctx, dist, gulp))
             .then(stream => {
-                if (ctx.oper & Operation.build) {
+                if (option.withTDS === false || (ctx.oper & Operation.build)) {
                     return stream['js'];
                 } else {
                     return [
