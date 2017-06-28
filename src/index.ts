@@ -14,7 +14,7 @@ const uglify = require('gulp-uglify');
 
 /**
  * typescript assert task option.
- * 
+ *
  * @export
  * @interface ITsTaskOption
  * @extends {IAsserts}
@@ -22,14 +22,14 @@ const uglify = require('gulp-uglify');
 export interface ITsTaskOption extends IAsserts {
     /**
      * ts tsconfig.json file path.
-     * 
+     *
      * @type {sring}
      * @memberOf ITsTaskOption
      */
     tsconfigFile?: string;
     /**
      * ts compile ctx.
-     * 
+     *
      * @type {*}
      * @memberOf ITsTaskOption
      */
@@ -37,7 +37,7 @@ export interface ITsTaskOption extends IAsserts {
 
     /**
      * zip compile js.
-     * 
+     *
      * @type {(boolean | Object)}
      * @memberOf ITsTaskOption
      */
@@ -50,7 +50,7 @@ export interface ITsTaskOption extends IAsserts {
 
     /**
      * babel 6 option.
-     * 
+     *
      * @type {*}
      * @memberOf ITsTaskOption
      */
@@ -58,7 +58,7 @@ export interface ITsTaskOption extends IAsserts {
 
     /**
      * sourceMaps path.
-     * 
+     *
      * @type {string}
      * @memberOf ITsTaskOption
      */

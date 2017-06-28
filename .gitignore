@@ -4,6 +4,9 @@ node_modules
 bower_components
 jspm_packages
 build
+test/dist1
+test/dist2
+
 
 
 

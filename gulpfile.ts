@@ -7,14 +7,15 @@ import * as path from 'path';
 const del = require('del');
 
 gulp.task('build', () => {
-    var options: IEnvOption = minimist(process.argv.slice(2), {
+    let env: IEnvOption = minimist(process.argv.slice(2), {
         string: 'env',
         default: { env: process.env.NODE_ENV || 'development' }
-    });
-    return createTask(options);
+    }) as IEnvOption;
+    env.root = __dirname;
+    return createTask(env);
 });
 
-let createTask = (env) => {
+let createTask = (env: IEnvOption) => {
     let ctx = createContext({
         env: env,
         option: { src: 'src/**/*.ts', buildDist: 'build', dist: 'lib' }
@@ -22,16 +23,17 @@ let createTask = (env) => {
 
     let tasks = ctx.generateTask([
         {
-            name: 'test', src: 'test/**/*spec.ts', order: 1,
+            name: 'test', src: 'test/**/*spec.ts', order: (c) => 1 / c,
             oper: Operation.test | Operation.default,
-            pipes: [mocha],
+            pipes: [() => mocha()],
             output: null
         },
         { name: 'clean', order: 0, src: 'src', dist: 'lib', task: (config) => del(config.getDist()) }
     ]);
 
     return ctx.findTasksInDir(path.join(__dirname, './src')).then(ts => {
-        console.log(ts);
-        return runTaskSequence(gulp, tasks.concat(ts), ctx);
+        // console.log(ts);
+        // return runTaskSequence(gulp, tasks.concat(ts), ctx);
+        return ctx.run();
     });
 }
