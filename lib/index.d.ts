@@ -1,4 +1,3 @@
-/// <reference types="chai" />
 /// <reference types="gulp" />
 import { Gulp } from 'gulp';
 import { IAssertDist, IAsserts, ITaskInfo, PipeTask, Pipe, TransformSource, ITaskContext } from 'development-core';

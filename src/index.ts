@@ -136,7 +136,7 @@ export class TsCompile extends PipeTask {
         if (option.tsconfig) {
             return ts(option.tsconfig);
         } else {
-            let tsProject = ts.createProject(path.join(ctx.env.root || '', option.tsconfigFile || './tsconfig.json'));
+            let tsProject = ts.createProject(path.join(ctx.getRootPath() || '', option.tsconfigFile || './tsconfig.json'));
             return tsProject();
         }
     }
