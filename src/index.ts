@@ -59,10 +59,10 @@ export interface ITsTaskOption extends IAsserts {
     /**
      * sourceMaps path.
      *
-     * @type {string}
+     * @type {boolean}
      * @memberOf ITsTaskOption
      */
-    sourceMaps?: string;
+    sourceMaps?: string | boolean;
 
     /**
      * compile .tds define file.
@@ -117,9 +117,7 @@ export class TsCompile extends PipeTask {
 
     pipes(ctx: ITaskContext, dist: IAssertDist, gulp?: Gulp): Pipe[] {
         let option = <ITsTaskOption>ctx.option;
-        let pipes: Pipe[] = [
-            (ctx) => sourcemaps.write(option.sourceMaps || './sourcemaps')
-        ];
+        let pipes: Pipe[] = [];
 
         if (option.uglify) {
             pipes.splice(0, 0, {
@@ -128,6 +126,10 @@ export class TsCompile extends PipeTask {
             });
         }
         pipes = pipes.concat(super.pipes(ctx, dist, gulp));
+        if (option.sourceMaps !== false) {
+            let mappath = (_.isBoolean(option.sourceMaps) || !option.sourceMaps) ? './sourcemaps' : option.sourceMaps;
+            pipes.push((ctx) => sourcemaps.write(mappath));
+        }
         return pipes;
     }
 

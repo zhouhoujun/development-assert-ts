@@ -44,10 +44,10 @@ export interface ITsTaskOption extends IAsserts {
     /**
      * sourceMaps path.
      *
-     * @type {string}
+     * @type {boolean}
      * @memberOf ITsTaskOption
      */
-    sourceMaps?: string;
+    sourceMaps?: string | boolean;
     /**
      * compile .tds define file.
      */

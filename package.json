@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "@types/lodash": "^4.14.37",
-        "development-core": "^2.0.0",
+        "development-core": "^2.0.2",
         "gulp-cached": "^1.1.1",
         "gulp-sourcemaps": "^2.6.0",
         "gulp-typescript": "^3.1.7",
