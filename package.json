@@ -7,8 +7,8 @@
     "scripts": {
         "gulp": "gulp",
         "reinstall": "npm cache clean && npm install",
-        "test": "gulp build test",
-        "prepublish": "gulp build --release",
+        "test": "gulp start test",
+        "prepublish": "gulp start --release",
         "e2e": "protractor",
         "e2e.live": "protractor --elementExplorer"
     },
