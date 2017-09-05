@@ -123,8 +123,8 @@ export class TsCompile extends PipeTask {
             });
         }
         pipes = pipes.concat(super.pipes(ctx, dist, gulp));
-        if (option.sourceMaps !== false) {
-            let smap = ctx.to(option.sourceMaps);
+        let smap = ctx.to(option.sourceMaps);
+        if (smap !== false) {
             let mappath = (_.isBoolean(smap) || !smap) ? './sourcemaps' : smap;
             pipes.push((ctx) => sourcemaps.write(mappath));
         }
