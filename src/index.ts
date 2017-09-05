@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { Gulp } from 'gulp';
 import {
-    Operation, IAssertDist, IAsserts, ITaskInfo, PipeTask, IOperate, Pipe
+    Operation, IAssertDist, IAsserts, ITaskInfo, PipeTask, IOperate, Pipe, CtxType
     , TransformSource, task, ITaskContext, ITransform
 } from 'development-core';
 import * as _ from 'lodash';
@@ -23,38 +23,31 @@ export interface ITsTaskOption extends IAsserts {
     /**
      * ts tsconfig.json file path.
      *
-     * @type {sring}
+     * @type {CtxType<string>}
      * @memberOf ITsTaskOption
      */
-    tsconfigFile?: string;
+    tsconfigFile?: CtxType<string>;
+
     /**
      * ts compile ctx.
      *
-     * @type {*}
-     * @memberOf ITsTaskOption
+     * @type {CtxType<any>}
+     * @memberof ITsTaskOption
      */
-    tsconfig?: any;
+    tsconfig?: CtxType<any>;
 
     /**
      * zip compile js.
      *
-     * @type {(boolean | Object)}
+     * @type {CtxType<boolean | Object>}
      * @memberOf ITsTaskOption
      */
-    uglify?: boolean | Object;
+    uglify?: CtxType<boolean | Object>;
 
     /**
      * ts pipes tasks.
      */
-    tsPipes: Pipe[];
-
-    /**
-     * babel 6 option.
-     *
-     * @type {*}
-     * @memberOf ITsTaskOption
-     */
-    babelOption: any;
+    tsPipes: CtxType<Pipe[]>;
 
     /**
      * sourceMaps path.
@@ -62,12 +55,12 @@ export interface ITsTaskOption extends IAsserts {
      * @type {boolean}
      * @memberOf ITsTaskOption
      */
-    sourceMaps?: string | boolean;
+    sourceMaps?: CtxType<string | boolean>;
 
     /**
      * compile .tds define file.
      */
-    withTDS?: boolean;
+    withTDS?: CtxType<boolean>;
 }
 
 
@@ -90,8 +83,9 @@ export class TsCompile extends PipeTask {
             (ctx) => cache('typescript'),
             (ctx) => sourcemaps.init()
         ];
-        if (option.tsPipes && option.tsPipes.length > 0) {
-            pipes = pipes.concat(option.tsPipes);
+        let tsps = ctx.to(option.tsPipes);
+        if (tsps && tsps.length > 0) {
+            pipes = pipes.concat(tsps);
         }
         pipes.push((ctx) => this.getTsProject(ctx));
         return pipes;
@@ -103,7 +97,7 @@ export class TsCompile extends PipeTask {
         let option = <ITsTaskOption>ctx.option;
         return this.pipes2Promise(source, ctx, dist, gulp, this.tsPipes(ctx, dist, gulp))
             .then(stream => {
-                if (option.withTDS === false || (ctx.oper & Operation.build)) {
+                if (ctx.to(option.withTDS) === false || (ctx.oper & Operation.build)) {
                     return stream['js'];
                 } else {
                     return [
@@ -122,12 +116,16 @@ export class TsCompile extends PipeTask {
         if (option.uglify) {
             pipes.splice(0, 0, {
                 oper: Operation.deploy | Operation.release,
-                toTransform: (ctx) => _.isBoolean(option.uglify) ? uglify() : uglify(option.uglify)
+                toTransform: (ctx) => {
+                    let uglifycfg = ctx.to(option.uglify);
+                    return _.isBoolean(uglifycfg) ? uglify() : uglify(uglifycfg);
+                }
             });
         }
         pipes = pipes.concat(super.pipes(ctx, dist, gulp));
         if (option.sourceMaps !== false) {
-            let mappath = (_.isBoolean(option.sourceMaps) || !option.sourceMaps) ? './sourcemaps' : option.sourceMaps;
+            let smap = ctx.to(option.sourceMaps);
+            let mappath = (_.isBoolean(smap) || !smap) ? './sourcemaps' : smap;
             pipes.push((ctx) => sourcemaps.write(mappath));
         }
         return pipes;
@@ -136,9 +134,9 @@ export class TsCompile extends PipeTask {
     private getTsProject(ctx: ITaskContext): ITransform {
         let option = <ITsTaskOption>ctx.option;
         if (option.tsconfig) {
-            return ts(option.tsconfig);
+            return ts(ctx.to(option.tsconfig));
         } else {
-            let tsProject = ts.createProject(path.join(ctx.getRootPath() || '', option.tsconfigFile || './tsconfig.json'));
+            let tsProject = ts.createProject(path.join(ctx.getRootPath() || '', ctx.to(option.tsconfigFile) || './tsconfig.json'));
             return tsProject();
         }
     }

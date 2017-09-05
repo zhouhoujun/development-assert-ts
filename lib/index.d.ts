@@ -1,6 +1,6 @@
 /// <reference types="gulp" />
 import { Gulp } from 'gulp';
-import { IAssertDist, IAsserts, ITaskInfo, PipeTask, Pipe, TransformSource, ITaskContext } from 'development-core';
+import { IAssertDist, IAsserts, ITaskInfo, PipeTask, Pipe, CtxType, TransformSource, ITaskContext } from 'development-core';
 /**
  * typescript assert task option.
  *
@@ -12,46 +12,39 @@ export interface ITsTaskOption extends IAsserts {
     /**
      * ts tsconfig.json file path.
      *
-     * @type {sring}
+     * @type {CtxType<string>}
      * @memberOf ITsTaskOption
      */
-    tsconfigFile?: string;
+    tsconfigFile?: CtxType<string>;
     /**
      * ts compile ctx.
      *
-     * @type {*}
-     * @memberOf ITsTaskOption
+     * @type {CtxType<any>}
+     * @memberof ITsTaskOption
      */
-    tsconfig?: any;
+    tsconfig?: CtxType<any>;
     /**
      * zip compile js.
      *
-     * @type {(boolean | Object)}
+     * @type {CtxType<boolean | Object>}
      * @memberOf ITsTaskOption
      */
-    uglify?: boolean | Object;
+    uglify?: CtxType<boolean | Object>;
     /**
      * ts pipes tasks.
      */
-    tsPipes: Pipe[];
-    /**
-     * babel 6 option.
-     *
-     * @type {*}
-     * @memberOf ITsTaskOption
-     */
-    babelOption: any;
+    tsPipes: CtxType<Pipe[]>;
     /**
      * sourceMaps path.
      *
      * @type {boolean}
      * @memberOf ITsTaskOption
      */
-    sourceMaps?: string | boolean;
+    sourceMaps?: CtxType<string | boolean>;
     /**
      * compile .tds define file.
      */
-    withTDS?: boolean;
+    withTDS?: CtxType<boolean>;
 }
 export declare class TsCompile extends PipeTask {
     constructor(info: ITaskInfo);
