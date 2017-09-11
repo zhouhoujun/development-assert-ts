@@ -97,7 +97,12 @@ export class TsCompile extends PipeTask {
         let option = <ITsTaskOption>ctx.option;
         return this.pipes2Promise(source, ctx, dist, gulp, this.tsPipes(ctx, dist, gulp))
             .then(stream => {
-                if (ctx.to(option.withTDS) === false || (ctx.oper & Operation.build)) {
+                let hastds = ctx.to(option.withTDS);
+
+                if (_.isUndefined(hastds) || _.isNull(hastds)) {
+                    hastds = (ctx.oper & Operation.release) > 0;
+                }
+                if (hastds === false) {
                     return stream['js'];
                 } else {
                     return [
