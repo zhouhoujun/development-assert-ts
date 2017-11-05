@@ -53,11 +53,11 @@ export class TsCompile extends PipeTask {
                     hastds = (ctx.oper & Operation.release) > 0;
                 }
                 if (hastds === false) {
-                    return stream['js'];
+                    return stream.js;
                 } else {
                     return [
-                        stream['js'],
-                        _.extend(stream['dts'], <IOperate>{ nonePipe: true })
+                        stream.js,
+                        _.extend(stream.dts, <IOperate>{ nonePipe: true })
                     ]
                 }
             });
